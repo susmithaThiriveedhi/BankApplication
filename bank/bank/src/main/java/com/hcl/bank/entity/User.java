@@ -1,16 +1,9 @@
 package com.hcl.bank.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -39,10 +32,6 @@ public class User {
 	
 	private double balance;
 	 
-	@JoinColumn(name="accountNumber")
-	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
-	private List<Transactions> transactions=new ArrayList<>();
-	
 	public String getPassword() {
 		return password; 
 	}
@@ -129,14 +118,6 @@ public class User {
 
 	public void setBalance(double balance) {
 		this.balance = balance;
-	}
-
-	public List<Transactions> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(List<Transactions> transactions) {
-		this.transactions = transactions;
 	}
 	
 }

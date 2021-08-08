@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hcl.bank.dto.UserRequestDto;
 import com.hcl.bank.entity.User;
+import com.hcl.bank.exception.UserAlreadyExistsException;
 import com.hcl.bank.repository.UserRepository;
 import com.hcl.bank.service.UserService;
 
@@ -18,12 +19,16 @@ public class UserServiceImpl implements UserService{
 	UserRepository userRepository;
 	
 	@Override
-	public User saveUser(UserRequestDto userRequestDto) {
+	public User saveUser(UserRequestDto userRequestDto) throws UserAlreadyExistsException{
 		User user=new User();
 		Random rand = new Random();
 		BeanUtils.copyProperties(userRequestDto,user);
 		user.setBalance(10000);
 		user.setAccountNumber("AcNo"+rand.nextInt(99999));
+		User userExisting = userRepository.findByMobileNumber(user.getMobileNumber());
+		if (userExisting != null) {
+			throw new UserAlreadyExistsException("User already exists...!!");		
+		}
 		return userRepository.save(user);
 	}
 
@@ -38,14 +43,5 @@ public class UserServiceImpl implements UserService{
 		BeanUtils.copyProperties(userRequestDto,user);
 		return userRepository.save(user);
 	}
-
-//	@Override
-//	public UserRequestDto getUser(String accountNumber) {
-//		User user=userRepository.findByAccountNumber(accountNumber);
-//		
-//		UserRequestDto userRequestDto=new UserRequestDto();
-//		BeanUtils.copyProperties(user, userRequestDto);
-//		return userRequestDto;
-//	}
 	
 }
